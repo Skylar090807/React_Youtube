@@ -1,24 +1,23 @@
-import React, { PureComponent } from 'react'
+import React, { memo } from 'react'
+//function Type Components의 memo는 Class Type Components의 memo와 같은 기능.
+//function Type Components는 this를 쓰지 않아도 된다.
+const HabitAddForm = memo((props) => {
+  const formRef = React.createRef() //react Ref and the DOM
+  const inputRef = React.createRef()
 
-class HabitAddForm extends PureComponent {
-  formRef = React.createRef() //react Ref and the DOM
-  inputRef = React.createRef()
-
-  onSubmit = (event) => {
+  const onSubmit = (event) => {
     event.preventDefault() //preventDefault 브라우저의 기본 기능 취소
-    const name = this.inputRef.current.value
-    name && this.props.onAdd(name) //onAdd라는 callback function을 App의 handleAdd를 props로 받는다.
-    this.formRef.current.reset() //this.inputRef.current.value = '';
+    const name = inputRef.current.value
+    name && props.onAdd(name) //onAdd라는 callback function을 App의 handleAdd를 props로 받는다.
+    formRef.current.reset() //inputRef.current.value = '';
   }
 
-  render() {
-    return (
-      <form ref={this.formRef} className="add-form" onSubmit={this.onSubmit}>
-        <input ref={this.inputRef} type="text" className="add-input" placeholder="Please into your Habit" />
-        <button className="add-button">Add</button>
-      </form>
-    )
-  }
-}
+  return (
+    <form ref={formRef} className="add-form" onSubmit={onSubmit}>
+      <input ref={inputRef} type="text" className="add-input" placeholder="Please into your Habit" />
+      <button className="add-button">Add</button>
+    </form>
+  )
+})
 
 export default HabitAddForm
