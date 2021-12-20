@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import './app.css'
+import styles from './app.module.css'
 import VideoList from './components/video_list/video_list'
+import SearchHeader from './components/search_header/search_header'
 
-function App() {
-  //component가 mount되면
-  const [videos, setVideos] = useState([]) //mostpopular videos 받아와서 비동기적으로 setVideos라는 API를 이용해 component data update
+function App({ youtube }) {
+  const [videos, setVideos] = useState([])
+  const search = (query) => {
+    youtube
+      .search(query) //
+      .then((videos) => setVideos(videos))
+  }
 
   useEffect(() => {
-    const requestOptions = {
-      //var를 썼다면 const로 바꾼다
-      method: 'GET',
-      redirect: 'follow',
-    }
-
-    fetch(
-      'https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=25&key=AIzaSyAtrSZkopq--QXlpEYQ5SrM9Kg5TZlZMl0',
-      requestOptions,
-    )
-      .then((response) => response.json())
-      .then((result) => setVideos(result.items))
-      .catch((error) => console.log('error', error))
+    youtube
+      .mostPopular() //
+      .then((videos) => setVideos(videos))
   }, [])
-  return <VideoList videos={videos} />
+  return (
+    <div className={styles.app}>
+      <SearchHeader onSearch={search} />
+      <VideoList videos={videos} />
+    </div>
+  )
 }
 
 export default App
